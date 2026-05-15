@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.studentcourse.model.Student" %>
+<%
+Student student = (Student) request.getAttribute("student");
+if (student == null) {
+    response.sendRedirect(request.getContextPath() + "/students");
+    return;
+}
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Update Student Details</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Update Student Details</h2>
+
+    <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
+    <% if (errorMessage != null) { %>
+        <div class="error"><%= errorMessage %></div>
+    <% } %>
+
+    <%-- Fixed: Post route mapped back to structural servlet URL definition --%>
+    <form action="${pageContext.request.contextPath}/student/edit" method="post">
+        <input type="hidden" name="id" value="<%= student.getStudentId() %>">
+
+        <label>Student Name</label>
+        <%-- Fixed: name parameter unified to studentName for parser matching --%>
+        <input type="text" name="studentName" value="<%= student.getStudentName() %>" required>
+
+        <label>Email Address</label>
+        <input type="email" name="email" value="<%= student.getEmail() %>" required>
+
+        <label>Phone Number</label>
+        <input type="text" name="phone" value="<%= student.getPhone() %>" required>
+
+        <label>Age</label>
+        <input type="number" name="age" value="<%= student.getAge() %>" required>
+
+        <label>City Location</label>
+        <input type="text" name="city" value="<%= student.getCity() %>" required>
+
+        <button type="submit">Update Student</button>
+    </form>
+    <br>
+    <a class="reset-btn" href="${pageContext.request.contextPath}/students">Back to Students List</a>
+</div>
+</body>
+</html>
