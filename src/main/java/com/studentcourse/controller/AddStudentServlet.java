@@ -1,7 +1,7 @@
 package com.studentcourse.controller;
 
 import java.io.IOException;
-
+import java.sql.SQLException;
 
 import com.studentcourse.dao.StudentDAO;
 import com.studentcourse.exception.InvalidStudentException;
@@ -97,7 +97,33 @@ public class AddStudentServlet extends HttpServlet {
                             "/WEB-INF/views/student-form.jsp");
             rd.forward(request, response);
 
-            } catch (Exception e) {
+            } catch (SQLException e) {
+
+                if (e.getMessage().contains("email")) {
+
+                    request.setAttribute(
+                            "errorMessage",
+                            "Email already exists");
+                            
+                } else if (e.getMessage().contains("phone")) {
+
+                    request.setAttribute(
+                            "errorMessage",
+                            "Phone number already exists");
+
+                } else {
+
+                    request.setAttribute(
+                            "errorMessage",
+                            "Database error occurred");
+                }
+
+                request.getRequestDispatcher(
+                        "/WEB-INF/views/student-form.jsp")
+                        .forward(request, response);
+            }
+        
+        catch (Exception e) {
 
                 e.printStackTrace();
 

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/student/update")
 public class UpdateStudentServlet extends HttpServlet {
@@ -49,7 +50,32 @@ public class UpdateStudentServlet extends HttpServlet {
 
             response.sendRedirect(request.getContextPath() + "/students");
 
-        } catch (InvalidStudentException e) {
+        } catch (SQLException e) {
+
+            if (e.getMessage().contains("email")) {
+
+                request.setAttribute(
+                        "errorMessage",
+                        "Email already exists");
+                        
+            } else if (e.getMessage().contains("phone")) {
+
+                request.setAttribute(
+                        "errorMessage",
+                        "Phone number already exists");
+
+            } else {
+
+                request.setAttribute(
+                        "errorMessage",
+                        "Database error occurred");
+            }
+
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/student-form.jsp")
+                    .forward(request, response);
+        }
+        catch (InvalidStudentException e) {
             request.setAttribute("errorMessage", e.getMessage());
             // Re-populate and fallback variables cleanly for the presentation layer rendering framework loops
             request.setAttribute("student", extractFallbackFormState(request));
