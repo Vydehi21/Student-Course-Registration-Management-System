@@ -22,7 +22,7 @@
     </div>
     <br><br>
 
-    <form action="${pageContext.request.contextPath}/register-student-course" method="post">
+    <form action="${pageContext.request.contextPath}/register-student-course" method="post" novalidate>
         <label>Select Student</label>
         <select name="studentId" required>
             <option value="">-- Choose a Student --</option>

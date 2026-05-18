@@ -67,9 +67,13 @@ public class AddStudentServlet extends HttpServlet {
             s.setPhone(
                     request.getParameter("phone"));
 
-            s.setAge(
-                    Integer.parseInt(
-                            request.getParameter("age")));
+            String ageParam = request.getParameter("age");
+
+            if(ageParam != null && !ageParam.trim().isEmpty()) {
+                s.setAge(Integer.parseInt(ageParam));
+            } else {
+                s.setAge(0);
+            }
             s.setCity(
                     request.getParameter("city"));
 

@@ -24,24 +24,24 @@ if (student == null) {
     <% } %>
 
     <%-- Fixed: Post route mapped back to structural servlet URL definition --%>
-    <form action="${pageContext.request.contextPath}/student/edit" method="post">
+    <form action="${pageContext.request.contextPath}/student/update" method="post" >
         <input type="hidden" name="id" value="<%= student.getStudentId() %>">
 
         <label>Student Name</label>
         <%-- Fixed: name parameter unified to studentName for parser matching --%>
-        <input type="text" name="studentName" value="<%= student.getStudentName() %>" required>
+        <input type="text" name="studentName" value="<%= student.getStudentName() %>" >
 
         <label>Email Address</label>
-        <input type="email" name="email" value="<%= student.getEmail() %>" required>
+        <input type="email" name="email" value="<%= student.getEmail() %>">
 
         <label>Phone Number</label>
-        <input type="text" name="phone" value="<%= student.getPhone() %>" required>
+        <input type="text" name="phone" value="<%= student.getPhone() %>" >
 
         <label>Age</label>
-        <input type="number" name="age" value="<%= student.getAge() %>" required>
+        <input type="number" name="age" value="<%= student.getAge() %>" >
 
         <label>City Location</label>
-        <input type="text" name="city" value="<%= student.getCity() %>" required>
+        <input type="text" name="city" value="<%= student.getCity() %>" >
 
         <button type="submit">Update Student</button>
     </form>

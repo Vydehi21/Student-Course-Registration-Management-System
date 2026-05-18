@@ -15,7 +15,7 @@
         <div class="error"><%= error %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/course/add" method="post">
+    <form action="${pageContext.request.contextPath}/course/add" method="post" novalidate>
         <label>Course Name</label>
         <input type="text" name="courseName" required>
 

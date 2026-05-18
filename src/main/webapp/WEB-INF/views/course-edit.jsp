@@ -24,7 +24,7 @@ if (course == null) {
     <% } %>
 
     <%-- Fixed: Realigned processing target context mapping to EditCourseServlet POST endpoint --%>
-    <form action="${pageContext.request.contextPath}/course/edit" method="post">
+    <form action="${pageContext.request.contextPath}/course/update" method="post" novalidate>
         <input type="hidden" name="courseId" value="<%= course.getCourseId() %>">
 
         <label>Course Name</label>

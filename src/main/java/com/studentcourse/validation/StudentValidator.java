@@ -16,8 +16,14 @@ public class StudentValidator {
         }
 
         if (s.getEmail() == null ||
-        	    !s.getEmail().matches(
-        	    "^[A-Za-z0-9+_.-]+@(.+)$")) {
+        	    s.getEmail().trim().isEmpty()) {
+
+        	    throw new InvalidStudentException(
+        	            "Email is required");
+        	}
+
+        	if (!s.getEmail().matches(
+        	        "^[A-Za-z0-9+_.-]+@(.+)$")) {
 
         	    throw new InvalidStudentException(
         	            "Invalid email format");

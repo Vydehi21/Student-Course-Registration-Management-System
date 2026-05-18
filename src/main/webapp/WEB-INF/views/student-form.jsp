@@ -15,21 +15,21 @@
         <div class="error"><%= error %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/student/add" method="post">
+    <form action="${pageContext.request.contextPath}/student/add" method="post" >
         <label>Student Name</label>
-        <input type="text" name="studentName" required>
+        <input type="text" name="studentName" >
 
         <label>Email Address</label>
-        <input type="email" name="email" required>
+        <input type="email" name="email" >
 
         <label>Phone Number (10 Digits)</label>
-        <input type="text" name="phone" required>
+        <input type="text" name="phone" >
 
         <label>Age</label>
-        <input type="number" name="age" required>
+        <input type="number" name="age" >
 
         <label>City Location</label>
-        <input type="text" name="city" required>
+        <input type="text" name="city" >
 
         <button type="submit">Add Student</button>
     </form>
