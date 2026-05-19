@@ -20,7 +20,6 @@ public class ViewCoursesServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         courseDAO = new CourseDAO();
-        System.out.println("ViewCoursesServlet initialized");
     }
 
     @Override
@@ -28,12 +27,10 @@ public class ViewCoursesServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String keyword = request.getParameter("keyword");
-        System.out.println("Keyword received: " + keyword);
 
         try {
             List<Course> courses;
 
-            // Fixed: Removed local CourseDAO shadow initialization loop to safely re-use class field instance
             if (keyword != null && !keyword.trim().isEmpty()) {
                 courses = courseDAO.searchCourses(keyword.trim());
             } else {
@@ -49,15 +46,10 @@ public class ViewCoursesServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("keyword", keyword);
-            request.setAttribute("errorMessage", "Unable to load courses from database storage nodes.");
+            request.setAttribute("errorMessage", "An error occurred while loading the courses.");
 
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/error.jsp");
             rd.forward(request, response);
         }
-    }
-
-    @Override
-    public void destroy() {
-        System.out.println("ViewCoursesServlet destroyed");
     }
 }

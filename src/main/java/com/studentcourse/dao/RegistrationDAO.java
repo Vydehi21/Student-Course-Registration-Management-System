@@ -2,19 +2,14 @@ package com.studentcourse.dao;
 
 import com.studentcourse.util.DBConnection;
 import com.studentcourse.model.Registration;
-
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationDAO {
 
-    // Default Constructor avoiding sticky structural tracking connections
     public RegistrationDAO() {}
 
-    // Parametrized Constructor for dependency injection setups
-    public RegistrationDAO(Connection conn) {}
-
-    // INSERT
     public int registerStudent(Registration r) throws SQLException {
         String sql = "INSERT INTO registrations(student_id, course_id, registration_date, status) VALUES (?, ?, ?, ?)";
         
@@ -29,18 +24,15 @@ public class RegistrationDAO {
             return ps.executeUpdate();
             
         } catch (SQLException e) {
-            // Check for the MySQL custom trigger error state code (45000)
-            if ("45000".equals(e.getSQLState()) || e.getMessage().contains("Duplicate active registration")) {
-                System.err.println("Validation Blocked: Student already holds an active enrollment profile.");
-                // Throw an explicit message that our Servlet's catch block can read
+            String state = e.getSQLState();
+            String msg = e.getMessage() != null ? e.getMessage() : "";
+            if ("45000".equals(state) || msg.contains("Duplicate active registration")) {
                 throw new SQLException("Duplicate active registration is not allowed for this student and course.", e);
             }
-            throw e; // pass generic SQL exceptions through normally
+            throw e; 
         }
     }
 
-
-    // LIST ALL 
     public List<Registration> getAllRegistrations() throws SQLException {
         List<Registration> list = new ArrayList<>();
         String sql = "SELECT r.registration_id, s.student_name, c.course_name, r.registration_date, r.status " +
@@ -67,7 +59,6 @@ public class RegistrationDAO {
         return list;
     }
     
-    // UPDATE STATUS
     public int updateStatus(int id, String status) throws SQLException {
         String sql = "UPDATE registrations SET status=? WHERE registration_id=?";
         
@@ -81,7 +72,6 @@ public class RegistrationDAO {
         }
     }
     
-    // DELETE REGISTRATION
     public int deleteRegistration(int id) throws SQLException {
         String sql = "DELETE FROM registrations WHERE registration_id=?";
         
@@ -93,7 +83,6 @@ public class RegistrationDAO {
         }
     }
     
-    // DASHBOARD SUMMARY COUNT
     public int countRegistrations() throws SQLException {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM registrations";
@@ -109,7 +98,6 @@ public class RegistrationDAO {
         return count;
     }
     
-    // SEARCH FILTER
     public List<Registration> searchRegistrations(String keyword) throws SQLException {
         List<Registration> registrationList = new ArrayList<>();
         String sql = "SELECT r.registration_id, s.student_name, c.course_name, r.registration_date, r.status " +
@@ -121,7 +109,11 @@ public class RegistrationDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
+            if (keyword == null) {
+                keyword = "";
+            }
             String wrapperPattern = "%" + keyword + "%";
+
             ps.setString(1, wrapperPattern);
             ps.setString(2, wrapperPattern);
             ps.setString(3, wrapperPattern);

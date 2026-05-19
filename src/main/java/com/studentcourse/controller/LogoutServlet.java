@@ -28,17 +28,16 @@ public class LogoutServlet extends HttpServlet {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
-                // Fixed: Aligned key string selection target to match rememberedUsername identifier name
                 if ("rememberedUsername".equals(c.getName())) {
                     c.setValue("");
-                    c.setMaxAge(0); // Trigger immediate removal on client nodes
-                    c.setPath("/");  // Match root path configuration
+                    c.setMaxAge(0); 
+                    c.setPath("/"); 
                     response.addCookie(c);
                 }
             }
         }
 
-        // Return user to public system landing page path
+        
         response.sendRedirect(request.getContextPath() + "/login");
     }
 }

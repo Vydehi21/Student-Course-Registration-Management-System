@@ -7,14 +7,11 @@ import com.studentcourse.util.DBConnection;
 
 public class AdminDAO {
 
-    // Fixed: Removed unmanaged class-level field caching to avoid leak states
-    public AdminDAO() {
-    }
+    public AdminDAO() {}
     
-    private static final String LOGIN_QUERY = "SELECT * FROM admin WHERE username = ? AND password = ?";
+    private static final String LOGIN_QUERY = "SELECT admin_id, username FROM admin WHERE username = ? AND password = ?";
 
     public boolean validateAdmin(String username, String password) {
-        // Safe: Every transaction fetches and auto-disposes its execution connection locally
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(LOGIN_QUERY)) {
 

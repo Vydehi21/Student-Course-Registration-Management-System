@@ -36,7 +36,7 @@ public class AddCourseServlet extends HttpServlet {
         try {
             String courseName = request.getParameter("courseName");
             String trainerName = request.getParameter("trainerName");
-            String duration = request.getParameter("duration"); // Fixed: Aligned to SRS VARCHAR(50) specification
+            String duration = request.getParameter("duration");
 
             String feesParam = request.getParameter("fees");
             double fees = (feesParam != null && !feesParam.trim().isEmpty()) ? Double.parseDouble(feesParam.trim()) : 0.0;
@@ -48,7 +48,7 @@ public class AddCourseServlet extends HttpServlet {
             if (inserted) {
                 response.sendRedirect(request.getContextPath() + "/courses");
             } else {
-                request.setAttribute("errorMessage", "Failed to insert course records into storage.");
+                request.setAttribute("errorMessage", "Failed to save course. Please try again.");
                 request.getRequestDispatcher("/WEB-INF/views/course-form.jsp").forward(request, response);
             }
 
@@ -56,11 +56,11 @@ public class AddCourseServlet extends HttpServlet {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/course-form.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Validation failure: Course fees must be a valid numeric amount.");
+            request.setAttribute("errorMessage", "Course fees must be a valid number.");
             request.getRequestDispatcher("/WEB-INF/views/course-form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "An internal system error occurred processing your request.");
+            request.setAttribute("errorMessage", "An internal system error occurred. Please try again later.");
             request.getRequestDispatcher("/WEB-INF/views/course-form.jsp").forward(request, response);
         }
     }

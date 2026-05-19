@@ -15,7 +15,6 @@ public class EditStudentServlet extends HttpServlet {
 
     @Override
     public void init() {
-        // Fixed: Instantiate without assigning sticky lifecycle connections to prevent timeouts
         dao = new StudentDAO();
     }
 

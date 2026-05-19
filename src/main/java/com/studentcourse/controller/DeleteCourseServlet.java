@@ -31,7 +31,6 @@ public class DeleteCourseServlet extends HttpServlet {
 
             int courseId = Integer.parseInt(idParam.trim());
 
-            // Fixed: Enforce relational constraints per Section 9.4.6 delete safety rules
             if (courseDAO.hasActiveRegistrations(courseId)) {
                 response.sendRedirect(request.getContextPath() + "/courses?error=hasstudents");
                 return;

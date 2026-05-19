@@ -16,7 +16,6 @@ public class DeleteRegistrationServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // Safe: Initialized using the default constructor to rely on on-demand connection processing bounds
         registrationDAO = new RegistrationDAO();
     }
 
@@ -32,8 +31,6 @@ public class DeleteRegistrationServlet extends HttpServlet {
             }
 
             int id = Integer.parseInt(idParam.trim());
-            
-            // Execute safe transaction removal out of storage systems
             registrationDAO.deleteRegistration(id);
 
             response.sendRedirect(request.getContextPath() + "/registrations");
@@ -42,9 +39,7 @@ public class DeleteRegistrationServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/registrations?error=invalidid");
         } catch (Exception e) {
             e.printStackTrace();
-            
-            // Fixed: Encapsulated error handling fallback pointing to the secure views layer structure
-            request.setAttribute("errorMessage", "An unexpected failure occurred while trying to erase the record registration.");
+            request.setAttribute("errorMessage", "An unexpected error occurred while deleting the registration.");
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }

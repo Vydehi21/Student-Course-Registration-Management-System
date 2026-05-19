@@ -20,7 +20,6 @@ public class ViewRegistrationsServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         registrationDAO = new RegistrationDAO();
-        System.out.println("ViewRegistrationsServlet initialized");
     }
 
     @Override
@@ -44,14 +43,9 @@ public class ViewRegistrationsServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Unable to load student enrollment registry dataset lists.");
+            request.setAttribute("errorMessage", "An error occurred while loading registrations.");
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/error.jsp");
             rd.forward(request, response);
         }
-    }
-
-    @Override
-    public void destroy() {
-        System.out.println("ViewRegistrationsServlet destroyed");
     }
 }

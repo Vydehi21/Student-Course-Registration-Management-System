@@ -24,7 +24,6 @@ public class AddStudentServlet extends HttpServlet {
 
     private StudentDAO studentDAO;
 
-    // Lifecycle init
     @Override
     public void init() throws ServletException {
 
@@ -139,8 +138,6 @@ public class AddStudentServlet extends HttpServlet {
             }
         }
 
-
-    // Lifecycle destroy
     @Override
     public void destroy() {
 

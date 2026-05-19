@@ -6,24 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.studentcourse.model.Student;
 import com.studentcourse.util.DBConnection;
 
 public class StudentDAO {
-	
-    private Connection conn;
+
+    public StudentDAO() {}
     
-    public StudentDAO() {
-        // Keeps fields uninitialized since methods fetch connections on-demand via DBConnection
-    }
-
-    // Fixed constructor to correctly map the passed connection dependency
-    public StudentDAO(Connection conn) {
-        this.conn = conn;
-    }
-
-    // Insert Student
     public boolean addStudent(Student student) throws SQLException {
         String query = "INSERT INTO students (student_name, email, phone, age, city) VALUES (?, ?, ?, ?, ?)";
 
@@ -41,10 +30,9 @@ public class StudentDAO {
         }
     }
 
-    // Get All Students
     public List<Student> getAllStudents() throws SQLException {
         List<Student> students = new ArrayList<>();
-        String query = "SELECT * FROM students";
+        String query = "SELECT student_id, student_name, email, phone, age, city FROM students";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
@@ -64,10 +52,9 @@ public class StudentDAO {
         return students;
     }
 
-    // Get Student By ID
     public Student getStudentById(int studentId) throws SQLException {
         Student student = null;
-        String query = "SELECT * FROM students WHERE student_id = ?";
+        String query = "SELECT student_id, student_name, email, phone, age, city FROM students WHERE student_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -89,7 +76,6 @@ public class StudentDAO {
         return student;
     }
 
-    // Update Student
     public boolean updateStudent(Student student) throws SQLException {
         String query = "UPDATE students SET student_name = ?, email = ?, phone = ?, age = ?, city = ? WHERE student_id = ?";
 
@@ -108,7 +94,6 @@ public class StudentDAO {
         }
     }
 
-    // Check Student Registrations
     public boolean hasRegistrations(int studentId) throws SQLException {
         String query = "SELECT COUNT(*) FROM registrations WHERE student_id = ?";
 
@@ -126,7 +111,6 @@ public class StudentDAO {
         return false;
     }
 
-    // Delete Student
     public boolean deleteStudent(int studentId) throws SQLException {
         String query = "DELETE FROM students WHERE student_id = ?";
 
@@ -139,54 +123,40 @@ public class StudentDAO {
             return rows > 0;
         }
     }
-
-    // Dashboard Count Alternative 1
-    public int getStudentCount() throws SQLException {
-        String query = "SELECT COUNT(*) FROM students";
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        }
-        return 0;
-    }
     
-    // Dashboard Count Alternative 2 (Fixed NullPointerException)
     public int countStudents() throws SQLException {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM students";
         
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql); // Fixed: used local connection
+             PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 count = rs.getInt(1);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return count;
     }
     
-    // Search Students (Fixed Statement Order, Exceptions & Completeness)
     public List<Student> searchStudents(String keyword) throws SQLException {
         List<Student> list = new ArrayList<>();
-        String sql = "SELECT * FROM students WHERE student_name LIKE ? OR email LIKE ? OR city LIKE ?";
+        String sql = "SELECT student_id, student_name, email, phone, age, city FROM students " +
+                     "WHERE student_name LIKE ? OR email LIKE ? OR city LIKE ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
         	
+            if (keyword == null) {
+                keyword = "";
+            }
             String key = "%" + keyword + "%";
+            
             ps.setString(1, key);
             ps.setString(2, key);
             ps.setString(3, key);
 
-            try (ResultSet rs = ps.executeQuery()) { // Fixed: Executed after setting variables
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Student s = new Student();
                     s.setStudentId(rs.getInt("student_id"));

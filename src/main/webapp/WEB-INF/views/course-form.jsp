@@ -3,12 +3,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Add New Academic Course</title>
+    <title>Add New Course</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 <div class="container">
-    <h2>Add New Academic Course</h2>
+    <h2>Add New Course</h2>
 
     <% String error = (String) request.getAttribute("errorMessage"); %>
     <% if (error != null) { %>
@@ -23,8 +23,8 @@
         <input type="text" name="trainerName" required>
 
         <label>Duration Description (e.g., 3 Months, 40 Hours)</label>
-        <%-- Fixed: Switched type to text to support VARCHAR string mappings safely --%>
-        <input type="text" name="duration" required>
+        
+        <input type="number"name="duration" min="1" required >
 
         <label>Tuition Fee (INR)</label>
         <input type="number" step="0.01" name="fees" required>

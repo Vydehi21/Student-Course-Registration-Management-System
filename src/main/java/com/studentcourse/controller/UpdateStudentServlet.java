@@ -20,7 +20,6 @@ public class UpdateStudentServlet extends HttpServlet {
 
     @Override
     public void init() {
-        // Fixed: Switched to default initialization to protect the database layer from connection pooling leak hazards
         dao = new StudentDAO();
     }
 
@@ -31,7 +30,6 @@ public class UpdateStudentServlet extends HttpServlet {
         try {
             Student s = new Student();
             s.setStudentId(Integer.parseInt(request.getParameter("id")));
-            // Fixed: Re-aligned variable parameter retrieval key string to read 'studentName' matching student-edit.jsp input field parameters
             s.setStudentName(request.getParameter("studentName"));
             s.setEmail(request.getParameter("email"));
             s.setPhone(request.getParameter("phone"));
@@ -40,55 +38,37 @@ public class UpdateStudentServlet extends HttpServlet {
             s.setAge(ageParam != null && !ageParam.trim().isEmpty() ? Integer.parseInt(ageParam.trim()) : 0);
             s.setCity(request.getParameter("city"));
 
-            // Service domain validator rule evaluation execution
             StudentValidator.validate(s);
 
             boolean updated = dao.updateStudent(s);
             if (!updated) {
-                throw new Exception("Student storage profile write operation returned failed state.");
+                throw new Exception("Update operation failed.");
             }
 
             response.sendRedirect(request.getContextPath() + "/students");
 
         } catch (SQLException e) {
-
-            if (e.getMessage().contains("email")) {
-
-                request.setAttribute(
-                        "errorMessage",
-                        "Email already exists");
-                        
-            } else if (e.getMessage().contains("phone")) {
-
-                request.setAttribute(
-                        "errorMessage",
-                        "Phone number already exists");
-
+            String errorMsg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+            if (errorMsg.contains("email")) {
+                request.setAttribute("errorMessage", "Email already exists");
+            } else if (errorMsg.contains("phone")) {
+                request.setAttribute("errorMessage", "Phone number already exists");
             } else {
-
-                request.setAttribute(
-                        "errorMessage",
-                        "Database error occurred");
+                request.setAttribute("errorMessage", "Database error occurred");
             }
-
-            request.getRequestDispatcher(
-                    "/WEB-INF/views/student-form.jsp")
-                    .forward(request, response);
-        }
-        catch (InvalidStudentException e) {
+            request.getRequestDispatcher("/WEB-INF/views/student-edit.jsp").forward(request, response);
+        } catch (InvalidStudentException e) {
             request.setAttribute("errorMessage", e.getMessage());
-            // Re-populate and fallback variables cleanly for the presentation layer rendering framework loops
             request.setAttribute("student", extractFallbackFormState(request));
             request.getRequestDispatcher("/WEB-INF/views/student-edit.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "An internal exception error stopped student data records update actions.");
+            request.setAttribute("errorMessage", "An error occurred while updating the student records.");
             request.setAttribute("student", extractFallbackFormState(request));
             request.getRequestDispatcher("/WEB-INF/views/student-edit.jsp").forward(request, response);
         }
     }
 
-    // Isolated helper module to prevent duplicate parsing loops during exceptional view rendering rollbacks
     private Student extractFallbackFormState(HttpServletRequest request) {
         Student s = new Student();
         try {
@@ -100,7 +80,9 @@ public class UpdateStudentServlet extends HttpServlet {
             String ageStr = request.getParameter("age");
             if (ageStr != null && !ageStr.trim().isEmpty()) s.setAge(Integer.parseInt(ageStr.trim()));
             s.setCity(request.getParameter("city"));
-        } catch(Exception e) { /* Swallow fallback calculation edge-case crashes safely */ }
+        } catch(Exception e) {
+            // ignore parsing exceptions here
+        }
         return s;
     }
 }

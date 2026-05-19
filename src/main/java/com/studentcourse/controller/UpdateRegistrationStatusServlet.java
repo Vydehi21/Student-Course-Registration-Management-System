@@ -19,7 +19,6 @@ public class UpdateRegistrationStatusServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             String status = request.getParameter("status");
 
-            // Fixed: Use safe connection handling instead of leaking raw database connection references
             RegistrationDAO dao = new RegistrationDAO();
             dao.updateStatus(id, status);
 
@@ -27,7 +26,7 @@ public class UpdateRegistrationStatusServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Failed to update registration status parameters.");
+            request.setAttribute("errorMessage", "Failed to update registration status.");
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }

@@ -20,7 +20,6 @@ public class ViewStudentsServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         studentDAO = new StudentDAO();
-        System.out.println("ViewStudentsServlet initialized");
     }
 
     @Override
@@ -47,15 +46,10 @@ public class ViewStudentsServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("keyword", keyword);
-            request.setAttribute("errorMessage", "Unable to load students collection due to a system storage exception.");
+            request.setAttribute("errorMessage", "An error occurred while loading the student records.");
             
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/error.jsp");
             rd.forward(request, response);
         }
-    }
-
-    @Override
-    public void destroy() {
-        System.out.println("ViewStudentsServlet destroyed");
     }
 }

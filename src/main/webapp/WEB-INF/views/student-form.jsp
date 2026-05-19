@@ -19,16 +19,16 @@
         <label>Student Name</label>
         <input type="text" name="studentName" >
 
-        <label>Email Address</label>
+        <label>Email</label>
         <input type="email" name="email" >
 
-        <label>Phone Number (10 Digits)</label>
+        <label>Phone Number</label>
         <input type="text" name="phone" >
 
         <label>Age</label>
         <input type="number" name="age" >
 
-        <label>City Location</label>
+        <label>City</label>
         <input type="text" name="city" >
 
         <button type="submit">Add Student</button>

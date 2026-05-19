@@ -15,7 +15,7 @@ if (cookies != null) {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin Authentication Gateway</title>
+    <title>Login</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -27,20 +27,19 @@ if (cookies != null) {
         <div class="error"><%= error %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/login-action" method="post">
-        <label>Username Handle</label>
+    <form action="${pageContext.request.contextPath}/login-action" method="post" novalidate>
+        <label>Username</label>
         <input type="text" name="username" value="<%= rememberedUsername %>" required>
 
-        <label>Password Credentials</label>
+        <label>Password</label>
         <input type="password" name="password" required>
 
         <div class="remember" style="margin: 15px 0;">
-            <%-- Fixed: Merged checking attribute assignment syntax into clean, inline brackets --%>
             <input type="checkbox" name="remember" id="remember" <%= !rememberedUsername.isEmpty() ? "checked" : "" %>>
             <label style="display: inline; font-weight: normal; margin: 0 0 0 5px;" for="remember">Remember Username</label>
         </div>
 
-        <button type="submit" class="primary-btn" style="width: 100%;">Authenticate Session</button>
+        <button type="submit" class="primary-btn" style="width: 100%;">Login</button>
     </form>
 </div>
 </body>

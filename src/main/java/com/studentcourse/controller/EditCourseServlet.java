@@ -24,7 +24,7 @@ public class EditCourseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Safe: Manual session check code removed here as AuthFilter intercepts this route cleanly
+        
         try {
             String idParam = request.getParameter("id");
             if (idParam == null || idParam.trim().isEmpty()) {

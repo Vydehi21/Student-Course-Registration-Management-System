@@ -14,6 +14,12 @@ public class StudentValidator {
             throw new InvalidStudentException(
                     "Student name is required");
         }
+        
+        if (!s.getStudentName().matches("[A-Za-z ]+")) {
+
+            throw new InvalidStudentException(
+                    "Student name must contain only alphabets");
+        }
 
         if (s.getEmail() == null ||
         	    s.getEmail().trim().isEmpty()) {
@@ -28,13 +34,20 @@ public class StudentValidator {
         	    throw new InvalidStudentException(
         	            "Invalid email format");
         	}
-        if (s.getPhone() == null ||
-        	    !s.getPhone().matches("\\d{10}")) {
+       
+        	if (s.getPhone() == null ||
+        		    s.getPhone().trim().isEmpty()) {
 
-        	    throw new InvalidStudentException(
-        	            "Phone must contain exactly 10 digits");
-        	}
+        		    throw new InvalidStudentException(
+        		            "Phone number is required");
+        		}
 
+        		if (!s.getPhone().matches("\\d{10}")) {
+
+        		    throw new InvalidStudentException(
+        		            "Phone number must contain exactly 10 digits");
+        		}
+        		
         if (s.getAge() < 18) {
 
             throw new InvalidStudentException(

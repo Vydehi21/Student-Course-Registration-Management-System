@@ -21,7 +21,6 @@ public class DashboardServlet extends HttpServlet {
 
     @Override
     public void init() {
-        // Fixed: Instantiated safely using no-argument constructors to eliminate static tracking leaks
         studentDAO = new StudentDAO();
         courseDAO = new CourseDAO();
         registrationDAO = new RegistrationDAO();
@@ -32,7 +31,6 @@ public class DashboardServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // Fetch system ledger calculations safely via on-demand request windows
             int studentCount = studentDAO.countStudents();
             int courseCount = courseDAO.countCourses();
             int registrationCount = registrationDAO.countRegistrations();
@@ -45,7 +43,7 @@ public class DashboardServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "An internal system error occurred loading metrics metrics.");
+            request.setAttribute("errorMessage", "An error occurred while loading dashboard metrics.");
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }

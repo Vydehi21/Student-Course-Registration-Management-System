@@ -27,7 +27,6 @@ public class RegistrationFormServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Load live dropdown lists for the selection fields
             request.setAttribute("students", studentDAO.getAllStudents());
             request.setAttribute("courses", courseDAO.getAllCourses());
 
@@ -36,7 +35,7 @@ public class RegistrationFormServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Unable to load student or course selection options.");
+            request.setAttribute("errorMessage", "Failed to load student or course details.");
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }

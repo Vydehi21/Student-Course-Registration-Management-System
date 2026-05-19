@@ -10,7 +10,6 @@ public class Student {
     private String city;
 
     public Student() {
-
     }
 
  // Constructor without ID

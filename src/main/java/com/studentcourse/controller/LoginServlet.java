@@ -1,6 +1,7 @@
 package com.studentcourse.controller;
 
 import java.io.IOException;
+import com.studentcourse.validation.AdminValidator;
 import com.studentcourse.dao.AdminDAO;
 import com.studentcourse.exception.InvalidLoginException;
 import jakarta.servlet.RequestDispatcher;
@@ -44,13 +45,8 @@ public class LoginServlet extends HttpServlet {
         password = (password != null) ? password.trim() : "";
 
         try {
-            // Section 19.1 Server-side login parameter null/empty checks
-            if (username.isEmpty()) {
-                throw new InvalidLoginException("Username is required");
-            }
-            if (password.isEmpty()) {
-                throw new InvalidLoginException("Password is required");
-            }
+        
+        	AdminValidator.validate(username, password);
 
             // Database validation call handling
             boolean isValid = adminDAO.validateAdmin(username, password);
@@ -58,30 +54,27 @@ public class LoginServlet extends HttpServlet {
                 throw new InvalidLoginException("Invalid username or password");
             }
 
-            // Establish fresh HTTP Session bounds matching Section 9.1.4 / 10.1 rules
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", username);
             session.setAttribute("loginTime", new java.util.Date());
             session.setMaxInactiveInterval(30 * 60); // 30 Minute timeout session token parameters
 
-            // Core Cookie Rule Enforcement Block (Section 9.1.6 / 11.2)
             Cookie cookie = new Cookie("rememberedUsername", username);
             cookie.setHttpOnly(true);
-            cookie.setPath("/"); // Standardized baseline global scoping paths
+            cookie.setPath("/"); 
 
             if (remember != null) {
                 cookie.setMaxAge(7 * 24 * 60 * 60); // Retain cookie property values for 7 Days
             } else {
-                cookie.setMaxAge(0); // Instantly erase active persistent client tracking cache cookies
+                cookie.setMaxAge(0);
             }
             response.addCookie(cookie);
 
-            // Successful Login Rule (Page 4, Section 7): Use sendRedirect
             response.sendRedirect(request.getContextPath() + "/dashboard");
 
         } catch (InvalidLoginException e) {
             request.setAttribute("errorMessage", e.getMessage());
-            // Failed Login Rule (Page 4, Section 7): Use RequestDispatcher
+         
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login.jsp");
             rd.forward(request, response);
         } catch (Exception e) {

@@ -57,15 +57,14 @@ public class RegisterStudentCourseServlet extends HttpServlet {
             if (result > 0) {
                 response.sendRedirect(request.getContextPath() + "/registrations");
             } else {
-                handleFailure(request, response, "Registration failed on database nodes.");
+                handleFailure(request, response, "Could not save registration details. Please try again.");
             }
 
         } catch (InvalidRegistrationException e) {
             handleFailure(request, response, e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            // This captures our Trigger message: "Duplicate active registration is not allowed..."
-            String msg = (e.getMessage() != null) ? e.getMessage() : "An internal error occurred processing registration.";
+            String msg = (e.getMessage() != null) ? e.getMessage() : "Something went wrong while processing the registration.";
             handleFailure(request, response, msg);
         }
     }

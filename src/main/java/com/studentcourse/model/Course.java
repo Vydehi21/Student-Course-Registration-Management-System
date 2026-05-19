@@ -5,7 +5,7 @@ public class Course {
     private int courseId;
     private String courseName;
     private String trainerName;
-    private String duration; // Fixed: Aligned to String to map VARCHAR database fields cleanly
+    private String duration; 
     private double fees;   
 
     public Course() {

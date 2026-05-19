@@ -32,13 +32,11 @@ public class UpdateCourseServlet extends HttpServlet {
             course.setCourseId(Integer.parseInt(request.getParameter("courseId")));
             course.setCourseName(request.getParameter("courseName"));
             course.setTrainerName(request.getParameter("trainerName"));
-            // Fixed: Switched from Integer parsing to safe String assignment matching SRS specification rules
             course.setDuration(request.getParameter("duration"));
             
             String feesParam = request.getParameter("fees");
             course.setFees(feesParam != null && !feesParam.trim().isEmpty() ? Double.parseDouble(feesParam.trim()) : 0.0);
 
-            // Execute Business logic domain validation
             CourseValidator.validate(course);
 
             boolean updated = courseDAO.updateCourse(course);
@@ -46,7 +44,7 @@ public class UpdateCourseServlet extends HttpServlet {
             if (updated) {
                 response.sendRedirect(request.getContextPath() + "/courses");
             } else {
-                request.setAttribute("errorMessage", "Course specification update failed on storage systems.");
+                request.setAttribute("errorMessage", "Could not update course details. Please try again.");
                 request.setAttribute("course", course);
                 request.getRequestDispatcher("/WEB-INF/views/course-edit.jsp").forward(request, response);
             }
@@ -56,12 +54,12 @@ public class UpdateCourseServlet extends HttpServlet {
             request.setAttribute("course", course);
             request.getRequestDispatcher("/WEB-INF/views/course-edit.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Format parsing restriction error: Tuition fees must be a valid numeric calculation amount.");
+            request.setAttribute("errorMessage", "Course fees must be a valid number.");
             request.setAttribute("course", course);
             request.getRequestDispatcher("/WEB-INF/views/course-edit.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Unable to execute system catalog course updates.");
+            request.setAttribute("errorMessage", "An error occurred while updating the course.");
             request.setAttribute("course", course);
             request.getRequestDispatcher("/WEB-INF/views/course-edit.jsp").forward(request, response);
         }

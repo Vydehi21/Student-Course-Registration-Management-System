@@ -11,27 +11,25 @@ if (student == null) {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Update Student Details</title>
+    <title>Edit Student</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 <div class="container">
-    <h2>Update Student Details</h2>
+    <h2>Edit Student Details</h2>
 
     <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
     <% if (errorMessage != null) { %>
         <div class="error"><%= errorMessage %></div>
     <% } %>
 
-    <%-- Fixed: Post route mapped back to structural servlet URL definition --%>
     <form action="${pageContext.request.contextPath}/student/update" method="post" >
         <input type="hidden" name="id" value="<%= student.getStudentId() %>">
 
         <label>Student Name</label>
-        <%-- Fixed: name parameter unified to studentName for parser matching --%>
         <input type="text" name="studentName" value="<%= student.getStudentName() %>" >
 
-        <label>Email Address</label>
+        <label>Email</label>
         <input type="email" name="email" value="<%= student.getEmail() %>">
 
         <label>Phone Number</label>
@@ -40,7 +38,7 @@ if (student == null) {
         <label>Age</label>
         <input type="number" name="age" value="<%= student.getAge() %>" >
 
-        <label>City Location</label>
+        <label>City</label>
         <input type="text" name="city" value="<%= student.getCity() %>" >
 
         <button type="submit">Update Student</button>

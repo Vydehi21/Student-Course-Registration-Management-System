@@ -4,12 +4,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Add New Course Registration</title>
+    <title>New Registration</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 <div class="container">
-    <h2>Register Student To Course</h2>
+    <h2>Register Student to Course</h2>
 
     <% String error = (String) request.getAttribute("error"); %>
     <% if (error != null) { %>
@@ -54,16 +54,16 @@
         </select>
 
         <label>Registration Date</label>
-        <input type="date" name="registrationDate" required>
+        <input type="date" name="registrationDate" max="<%= java.time.LocalDate.now() %>" required>
 
-        <label>Initial Processing Status</label>
+        <label>Status</label>
         <select name="status">
             <option value="ACTIVE">ACTIVE</option>
             <option value="COMPLETED">COMPLETED</option>
             <option value="CANCELLED">CANCELLED</option>
         </select>
 
-        <button type="submit" class="primary-btn">Complete Course Registration</button>
+        <button type="submit" class="primary-btn">Register Student</button>
     </form>
 </div>
 </body>
