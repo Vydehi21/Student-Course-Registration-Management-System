@@ -70,7 +70,7 @@ student-course-app/
 │       │           │   ├── Registration.java
 │       │           │   └── Student.java
 │       │           │
-│       │           ├── util/                 # Connection Resource Pooling Utilities
+│       │           ├── util/                 # Connection Utilities
 │       │           │   └── DBConnection.java
 │       │           │
 │       │           └── validation/           # Domain Layer Business Validators
@@ -78,6 +78,9 @@ student-course-app/
 │       │               ├── CourseValidator.java
 │       │               ├── RegistrationValidator.java
 │       │               └── StudentValidator.java
+│       │
+│       ├── resources/
+│       │   └── db.properties                 # Externalized Database Properties Configurations File
 │       │
 │       └── webapp/
 │           ├── css/
@@ -118,8 +121,8 @@ Ensure you have the following installed on your machine:
 *   Apache Tomcat 10.x
 
 ### Step 1: Database Initialization
-1. Open your MySQL Command Line Client or any GUI tool like MySQL Workbench / phpMyAdmin.
-2. Copy, paste, and execute the database schema script provided in the section below to create the database, tables, seed the default admin account, and compile the verification trigger.
+1. Open your MySQL Command Line Client or any GUI database management client tool.
+2. Execute the initialization script provided in the section below to configure your tables, seed the default admin account, and establish validation tracking triggers.
 
 ### Step 2: Import Project into Eclipse
 1. Open Eclipse Enterprise Edition.
@@ -128,21 +131,21 @@ Ensure you have the following installed on your machine:
 4. Browse to the root folder of this project (where `pom.xml` is located) and click **Finish**.
 5. Wait for Eclipse to resolve the required Jakarta dependencies listed in your `pom.xml`.
 
-### Step 3: Configure Database Connection
-1. Open the file `src/main/java/com/studentcourse/util/DBConnection.java`.
-2. Update the database URL, username, and password parameters to match your local MySQL server setup.
+### Step 3: Configure Database Connection Parameters
+1. Open the application parameters file: `src/main/resources/db.properties`.
+2. Update the credentials mapping keys (`db.url`, `db.user`, and `db.password`) to match your local database instance parameters.
 
 ### Step 4: Configure Apache Tomcat Server in Eclipse
-1. Locate the **Servers** tab at the bottom of Eclipse (If missing, go to *Window -> Show View -> Servers*).
-2. Click the link to create a new server, select **Apache -> Tomcat v10.0 Server**, and click **Next**.
-3. Browse and point to your local Tomcat installation directory, then click **Finish**.
+1. Locate the **Servers** tab at the bottom of Eclipse (If missing, select *Window -> Show View -> Servers*).
+2. Click the link to register a new server, choose **Apache -> Tomcat v10.0 Server**, and click **Next**.
+3. Point the file directory to your local Tomcat runtime binary target and click **Finish**.
 
 ### Step 5: Run and Deploy the Application
-1. Right-click the root project folder in your Project Explorer panel.
+1. Right-click the root project folder directory inside your Project Explorer panel.
 2. Choose **Run As -> Run on Server**.
 3. Select your configured Tomcat 10 server instance and click **Finish**.
-4. Once the server logs turn active, open your web browser and navigate to: `http://localhost:8080/student-course-app/login`
-5. Use the default login credentials: 
+4. Open your web browser and target the following URL link context: `http://localhost:8080/student-course-app/login`
+5. Input the default system login credentials: 
    * **Username:** `admin`
    * **Password:** `admin123`
 
