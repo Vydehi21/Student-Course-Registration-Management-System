@@ -1,26 +1,21 @@
-# Student Course Registration & Management System
+# Student Course Registration System
 
-A robust, enterprise-ready Java Servlet-based web application constructed strictly in adherence to the official Project Software Requirements Specification (SRS). The application implements a decoupled Model-View-Controller (MVC) architecture using core Java Web technology, robust server-side structural data validators, customized transactional constraint checking, and transactional connection-pool thread safety.
+This is a clean, Servlet-based web application designed to manage student enrollments, course catalogs, and admin control workflows. It is built entirely on native Java web technologies like Servlets, JSPs, and JDBC, following standard Model-View-Controller (MVC) architecture principles without relying on high-level frameworks like Spring Boot or Hibernate.
 
-## 📌 Project Overview & Intent
-The core intent of this application is to demonstrate mastery of standard Java Web stack fundamentals without dependency on advanced frameworks like Spring or Hibernate. Key elements implemented include:
-*   **Decoupled Controller Mapping Layers:** Explicit 1-to-1 mappings matching Servlet URL configuration specs.
-*   **Stateful Security Operations:** Session-based authentication guards alongside Cookie memory managers.
-*   **Database Transaction Lifecycle Control:** Thread-safe DAO operations wrapped in local auto-close resource handlers.
-*   **Strict Relational Consistency:** Embedded database-level `BEFORE INSERT` triggers safeguarding multi-row status integrity.
+## Features
+* **Admin Login & Dashboard:** Core credentials validation with a dashboard showcasing total summary metrics across all entities.
+* **Session Management:** Secure access guards protect internal page views from unauthenticated URL access.
+* **Remember Me Cookies:** Optional checkbox remembers the login username for returning sessions via an HTTP-only cookie.
+* **Student CRUD:** Complete workflow for adding, viewing, updating, and removing student details safely.
+* **Course CRUD:** Manage details like course names, instructors, tuition fees, and duration tracking.
+* **Enrollment Registry:** Connects students to courses while automatically enforcing constraints against multiple active enrollments.
 
----
-
-## 🛠️ Technology Stack Matrix
-*   **Language Environment:** Java SE 17 / 21
-*   **Backend Architecture:** Jakarta Servlets 6.0 / Java EE Core Servlets
-*   **Presentation Layer:** JavaServer Pages (JSP) 3.1
-*   **Database Engine:** MySQL 8.x
-*   **Connectivity API:** Java Database Connectivity (JDBC)
-*   **Target Application Server:** Apache Tomcat 10.x
-*   **Build & Lifecycle Utility:** Apache Maven 3.8+
-
----
+## Tech Stack
+* **Language Environment:** Java 17 / 21
+* **Web Technology:** Jakarta Servlets 6.0 & JSP 3.1
+* **Database Engine:** MySQL 8.x
+* **Server Target:** Apache Tomcat 10.x
+* **Build Utility:** Apache Maven 3.8+
 
 ## 📂 Project Directory Structure
 
@@ -79,6 +74,7 @@ student-course-app/
 │       │           │   └── DBConnection.java
 │       │           │
 │       │           └── validation/           # Domain Layer Business Validators
+│       │               ├── AdminValidator.java
 │       │               ├── CourseValidator.java
 │       │               ├── RegistrationValidator.java
 │       │               └── StudentValidator.java
@@ -107,36 +103,72 @@ student-course-app/
 └── pom.xml                                   # Dependency & Build Configuration Profile
 ```
 
----
-
 ## 🔒 Session & Cookie Constraints Validation
-*   **Security Interception Framework:** Every single protected workflow route is intercepted dynamically by `AuthFilter.java`. Unauthenticated traffic trying to access dashboard endpoints or data tables is immediately blocked and redirected via `sendRedirect` to `/login`.
-*   **Cookie Retention Rules:** If the admin selects **Remember Username**, the application sets a secure, HTTP-only `rememberedUsername` cookie with a 7-day expiration lifespan. If left unchecked, any existing configuration cookie is explicitly destroyed at the client node.
-*   **Post-Logout Session Hardening:** Executing a session logout invokes explicit `.invalidate()` routines on server caches. This safely prevents back-button browser caching from exposing system metric summaries once unauthenticated.
+*   **Security Interception Framework:** Every single protected workspace route is intercepted by `AuthFilter.java`. Unauthenticated traffic trying to access metrics dashboard endpoints or data views is automatically blocked and redirected to `/login`.
+*   **Cookie Retention Rules:** If the admin selects **Remember Username**, the application sets an HTTP-only `rememberedUsername` cookie with a 7-day lifespan. If left unchecked, any existing configuration cookie is explicitly destroyed.
+*   **Post-Logout Session Hardening:** Executing a session logout invokes explicit `.invalidate()` routines on server caches. This prevents back-button browser caching from exposing system metric summaries once unauthenticated.
+
+## 🚀 Environment Execution & Deployment Guide
+
+### Prerequisites
+Ensure you have the following installed on your machine:
+*   Java Development Kit (JDK 17 or 21)
+*   MySQL Server (8.x)
+*   Eclipse IDE for Enterprise Java and Web Developers
+*   Apache Tomcat 10.x
+
+### Step 1: Database Initialization
+1. Open your MySQL Command Line Client or any GUI tool like MySQL Workbench / phpMyAdmin.
+2. Copy, paste, and execute the database schema script provided in the section below to create the database, tables, seed the default admin account, and compile the verification trigger.
+
+### Step 2: Import Project into Eclipse
+1. Open Eclipse Enterprise Edition.
+2. Go to **File -> Import...**
+3. Select **Maven -> Existing Maven Projects** and click **Next**.
+4. Browse to the root folder of this project (where `pom.xml` is located) and click **Finish**.
+5. Wait for Eclipse to resolve the required Jakarta dependencies listed in your `pom.xml`.
+
+### Step 3: Configure Database Connection
+1. Open the file `src/main/java/com/studentcourse/util/DBConnection.java`.
+2. Update the database URL, username, and password parameters to match your local MySQL server setup.
+
+### Step 4: Configure Apache Tomcat Server in Eclipse
+1. Locate the **Servers** tab at the bottom of Eclipse (If missing, go to *Window -> Show View -> Servers*).
+2. Click the link to create a new server, select **Apache -> Tomcat v10.0 Server**, and click **Next**.
+3. Browse and point to your local Tomcat installation directory, then click **Finish**.
+
+### Step 5: Run and Deploy the Application
+1. Right-click the root project folder in your Project Explorer panel.
+2. Choose **Run As -> Run on Server**.
+3. Select your configured Tomcat 10 server instance and click **Finish**.
+4. Once the server logs turn active, open your web browser and navigate to: `http://localhost:8080/student-course-app/login`
+5. Use the default login credentials: 
+   * **Username:** `admin`
+   * **Password:** `admin123`
 
 ---
 
-## 🗄️ Database Installation & Compliance Script
+## 🗄️ Database Setup Script
 
-Execute this setup script within your local MySQL environment initialization terminal:
+Execute this setup script within your local MySQL environment configuration workspace:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS student_course_db;
 USE student_course_db;
 
--- 1. ADMIN TABLE (Section 13.3)
+-- 1. ADMIN TABLE
 CREATE TABLE admin (
     admin_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL
 );
 
--- Seed Default Mandatory Admin Credentials (Section 13.3)
-INSERT INTO admin (username, password) 
+-- Seed default admin account
+INSERT INTO admin (username, password)
 VALUES ('admin', 'admin123')
 ON DUPLICATE KEY UPDATE username=username;
 
--- 2. STUDENTS TABLE (Section 13.4)
+-- 2. STUDENTS TABLE
 CREATE TABLE students (
     student_id INT PRIMARY KEY AUTO_INCREMENT,
     student_name VARCHAR(100) NOT NULL,
@@ -144,33 +176,31 @@ CREATE TABLE students (
     phone VARCHAR(15) NOT NULL UNIQUE,
     age INT NOT NULL,
     city VARCHAR(50) NOT NULL,
-    CONSTRAINT check_student_age CHECK (age >= 18)
+    CONSTRAINT check_student_age CHECK (age >= 18) 
 );
 
--- 3. COURSES TABLE (Section 13.5)
+-- 3. COURSES TABLE
 CREATE TABLE courses (
     course_id INT PRIMARY KEY AUTO_INCREMENT,
     course_name VARCHAR(100) NOT NULL,
-    duration VARCHAR(50) NOT NULL,
-    fees DOUBLE NOT NULL,
+    duration VARCHAR(50) NOT NULL, 
+    fees DOUBLE NOT NULL,          
     trainer_name VARCHAR(100) NOT NULL,
     CONSTRAINT check_course_fees CHECK (fees > 0.0)
 );
 
--- 4. REGISTRATIONS TABLE (Section 13.6)
+-- 4. REGISTRATIONS TABLE
 CREATE TABLE registrations (
     registration_id INT PRIMARY KEY AUTO_INCREMENT,
     student_id INT NOT NULL,
     course_id INT NOT NULL,
     registration_date DATE NOT NULL,
-    status VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL, 
     FOREIGN KEY (student_id) REFERENCES students(student_id),
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
 
--- 5. THE SRS SPECIFICATION ENFORCEMENT TRIGGER (Section 9.5.4 Duplicate Rule)
--- Traditional UNIQUE combinations block users from re-registering for completed or dropped courses.
--- This trigger blocks duplicate rows ONLY if an existing enrollment profile status is active.
+-- 5. DUPLICATE ACTIVE ENROLLMENT CONSTRAINT TRIGGER
 DELIMITER $$
 
 CREATE TRIGGER check_duplicate_active_registration
@@ -195,52 +225,3 @@ END$$
 
 DELIMITER ;
 ```
-
----
-
-## 🚀 Environment Execution & Deployment Guide
-
-Follow these steps to deploy and run the application locally inside your enterprise IDE environment workspace:
-
-### Step 1: Database Baseline Configuration
-1. Open your native MySQL terminal and run the complete contents of the compilation schema script documented above.
-2. Verify table creation by running `SHOW TABLES;`.
-3. Open `com.project.app.util.DBConnection.java` or `db.properties` and verify your local server port variables, username, and password tokens match perfectly.
-
-### Step 2: Clean and Pack the Artifact
-Navigate to the application root directory (where your `pom.xml` resides) using your terminal and run the standard Maven phase assembly triggers:
-```bash
-mvn clean package
-```
-This builds a deployment-ready executable target file named `student-course-app.war` inside your local directory structure.
-
-### Step 3: Run the Application on Apache Tomcat Server
-#### Option A: Running from Eclipse Enterprise / IntelliJ
-1. Right-click the application root folder project node.
-2. Select **Run As** $\rightarrow$ **Run on Server**.
-3. Select your pre-configured Apache Tomcat 10+ server and click **Finish**.
-
-#### Option B: Deploying the Standalone WAR Artifact
-1. Copy the compiled `student-course-app.war` artifact file out of your `target/` directory.
-2. Drop the artifact directly into the structural runtime execution path directory of your standalone container server: `/tomcat/webapps/`.
-3. Start the server via your system command execution environment lines: `/tomcat/bin/startup.sh` or `startup.bat`.
-
-### Step 4: Access and Use the Application
-*   Open your web browser and navigate to the application entrance point URL path:
-    `http://localhost:8080/student-course-app/`
-*   The application automatically activates your `index.jsp` route and pushes traffic to the standalone rendering path `/login`.
-*   **Default Evaluation Login Credentials:**
-    *   **Username:** `admin`
-    *   **Password:** `admin123`
-
----
-
-## 🧪 Console Verification & Lifecycle Evidence
-As mandated explicitly by **Section 12.2** of your evaluation constraints, at least four primary core servlets execute strict lifecycle console reporting methods during system initialize and execution events. 
-
-Open your system environment logging output or terminal console to verify these explicit confirmation string parameters print natively during deployment and processing activities:
-*   `LoginPageServlet initialized successfully via init()`
-*   `LoginServlet initialized successfully via init()`
-*   `DashboardServlet initialized successfully via init()`
-*   `AddStudentServlet initialized successfully via init()`
-*   `AddCourseServlet initialized successfully via init()`
