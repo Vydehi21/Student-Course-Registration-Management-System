@@ -55,7 +55,7 @@
             <td><%= course.getCourseId() %></td>
             <td><%= course.getCourseName() %></td>
             <td><%= course.getTrainerName() %></td>
-            <td><%= course.getDuration() %> months</td>
+            <td><%= course.getDuration() %></td>
             <td>₹ <%= String.format("%.2f", course.getFees()) %></td>
             <td>
                 <a class="action-btn edit-btn" href="${pageContext.request.contextPath}/course/edit?id=<%= course.getCourseId() %>">Edit</a>

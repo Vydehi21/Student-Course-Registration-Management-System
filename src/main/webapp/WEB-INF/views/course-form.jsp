@@ -22,9 +22,9 @@
         <label>Trainer Name</label>
         <input type="text" name="trainerName" required>
 
-        <label>Duration Description (e.g., 3 Months, 40 Hours)</label>
+        <label>Duration Description (in months)</label>
         
-        <input type="number"name="duration" min="1" required >
+        <input type="number" name="duration" min="1" step="1" required >
 
         <label>Tuition Fee (INR)</label>
         <input type="number" step="0.01" name="fees" required>
